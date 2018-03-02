@@ -28,6 +28,4 @@ public class TownManagerTest {
         }
         Assert.AreNotEqual(firstTownOrder, secondTownOrder);
     }
-
-
 }
