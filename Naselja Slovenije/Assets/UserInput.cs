@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UserInput : MonoBehaviour {
-    //TownManager naselja;
+    [SerializeField] private float scale;
     // Use this for initialization
     void Start () {
         //naselja = new TownManager();
@@ -12,8 +12,8 @@ public class UserInput : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (Input.GetMouseButtonDown(0)) {
-            Debug.Log(Input.mousePosition);
-            Debug.Log(Vector2.Distance((Vector2) Input.mousePosition, TownManager.selectedTown.location));
+            Debug.Log( (Vector2) Camera.main.ScreenToWorldPoint ( Input.mousePosition ));
+            Debug.Log(Vector2.Distance((Vector2) Input.mousePosition, TownManager.selectedTown.location) / scale);
         }
 	}
 }
