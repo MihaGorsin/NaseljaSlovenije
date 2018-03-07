@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class TownManager {
+
     private static List<Town> towns = new List<Town> {
         new Town("Ljubljana", new Vector2(484f, 245f)),
         new Town("Maribor", new Vector2(400f, 400f)),
