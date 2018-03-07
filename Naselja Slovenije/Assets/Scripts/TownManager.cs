@@ -14,7 +14,7 @@ public static class TownManager {
     };
     private static int index = 0;
 
-    public static Town selectedTown = towns[index];
+    public static Town currentTown = towns[index];
 
     public static Town GetNextTown()
     {
@@ -23,8 +23,8 @@ public static class TownManager {
             index = 0;
             MyMath.ShuffleList(towns);
         }
-        selectedTown = towns[index];
-        return selectedTown;
+        currentTown = towns[index];
+        return currentTown;
     }
 
     public static int NumberOfAllTowns
@@ -38,12 +38,12 @@ public static class TownManager {
 public class Town
 {
     public string name;
-    public Vector2 location;
+    public Vector2 position;
 
     public Town(string destinationName, Vector2 locationPosition)
     {
         name = destinationName;
-        location = locationPosition;
+        position = locationPosition;
     }
 }
 

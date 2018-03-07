@@ -15,4 +15,16 @@ public static class MyMath {
             list[n] = value;
         }
     }
+
+    public static Vector3 MouseToWorldPosition(Vector3 mousePosition)
+    {
+        Vector3 worldPosition = mousePosition / 14f;
+        worldPosition.z = -50f;
+        return worldPosition;
+    }
+
+    public static float DistanceBetweenPoints(Vector3 p1, Vector3 p2)
+    {
+        return Vector3.Distance(p1,p2);
+    }
 }

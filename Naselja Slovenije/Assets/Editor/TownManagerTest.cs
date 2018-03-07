@@ -10,7 +10,7 @@ public class TownManagerTest {
     public void TownManagerCircleTest()
     {
         for (int i = 0; i <= TownManager.NumberOfAllTowns; i++) TownManager.GetNextTown();
-        Assert.IsNotNull(TownManager.selectedTown);
+        Assert.IsNotNull(TownManager.currentTown);
     }
 
     [Test]
@@ -18,12 +18,12 @@ public class TownManagerTest {
     {
         Town[] firstTownOrder = new Town[TownManager.NumberOfAllTowns];
         for(int i=0; i<TownManager.NumberOfAllTowns; i++) {
-            firstTownOrder[i] = TownManager.selectedTown;
+            firstTownOrder[i] = TownManager.currentTown;
             TownManager.GetNextTown();
         }
         Town[] secondTownOrder = new Town[TownManager.NumberOfAllTowns];
         for (int i = 0; i < TownManager.NumberOfAllTowns; i++) {
-            secondTownOrder[i] = TownManager.selectedTown;
+            secondTownOrder[i] = TownManager.currentTown;
             TownManager.GetNextTown();
         }
         Assert.AreNotEqual(firstTownOrder, secondTownOrder);
