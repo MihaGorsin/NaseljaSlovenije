@@ -26,6 +26,11 @@ public class InstructionsManager : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void ChangeTown(string name)
+    {
+        townToFind.GetComponent<Text>().text = name;
+    }
     
     public void DisplayInfoFor(string info, float time)
     {
