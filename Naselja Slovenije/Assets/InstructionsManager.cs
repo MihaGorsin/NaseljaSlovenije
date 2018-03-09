@@ -22,11 +22,6 @@ public class InstructionsManager : MonoBehaviour {
         infoText = transform.GetChild(5).gameObject;
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public void ChangeTown(string name)
     {
         townToFind.GetComponent<Text>().text = name;
