@@ -31,6 +31,10 @@ public class InstructionsManager : MonoBehaviour {
     {
         townToFind.GetComponent<Text>().text = name;
     }
+    public void RefreshTownsLeft(string current, string all)
+    {
+        townsLeft.GetComponent<Text>().text = current + " / " + all;
+    }
     
     public void DisplayInfoFor(string info, float time)
     {

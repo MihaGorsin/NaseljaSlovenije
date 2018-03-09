@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour {
     [SerializeField] InstructionsManager instructionManager;
 
     private bool clicked = false;
+    private const float minimalCameraSize = 12f;
+    private const float zoomPrecision = 10f;
+    private float defaultCameraSize;
     private GameObject point;
     private GameObject townPoint;
     private Town currentTown;
@@ -16,6 +19,8 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         currentTown = TownManager.currentTown;
+        defaultCameraSize = Camera.main.orthographicSize;
+        instructionManager.RefreshTownsLeft((TownManager.currentIndex + 1).ToString(), TownManager.NumberOfAllTowns.ToString());
     }
 	
 	// Update is called once per frame
@@ -54,6 +59,23 @@ public class GameManager : MonoBehaviour {
         Destroy(townPoint);
         currentTown = TownManager.GetNextTown();
         instructionManager.ChangeTown(currentTown.name);
+        instructionManager.RefreshTownsLeft((TownManager.currentIndex+1).ToString(), TownManager.NumberOfAllTowns.ToString());
         clicked = false;
+    }
+
+    public void ZoomIn()
+    {
+        Camera.main.orthographicSize -= zoomPrecision;
+        if (Camera.main.orthographicSize < minimalCameraSize) {
+            Camera.main.orthographicSize = minimalCameraSize;
+        }
+    }
+
+    public void ZoomOut()
+    {
+        Camera.main.orthographicSize += zoomPrecision;
+        if (Camera.main.orthographicSize > defaultCameraSize) {
+            Camera.main.orthographicSize = defaultCameraSize;
+        }
     }
 }

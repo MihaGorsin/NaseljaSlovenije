@@ -33,6 +33,12 @@ public static class TownManager {
             return towns.Count;
         }
     }
+
+    public static int currentIndex {
+        get {
+            return index;
+        }
+    }
 }
 
 public class Town

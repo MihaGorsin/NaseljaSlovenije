@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 135136145889686972}
   - component: {fileID: 23511874742722366}
   m_Layer: 0
-  m_Name: TownPoint
+  m_Name: TownPointPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
