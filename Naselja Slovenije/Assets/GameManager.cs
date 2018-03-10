@@ -8,13 +8,16 @@ public class GameManager : MonoBehaviour {
     [SerializeField] GameObject townPointPrefab;
     [SerializeField] InstructionsManager instructionManager;
 
-    private bool clicked = false;
     private const float minimalCameraSize = 12f;
     private const float zoomPrecision = 10f;
+
+    private bool oneClickPerTown = false;
     private float defaultCameraSize;
+
     private GameObject point;
     private GameObject townPoint;
     private Town currentTown;
+    private Vector3 lastMousePosition;
 
     // Use this for initialization
     void Start () {
@@ -35,24 +38,46 @@ public class GameManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (Input.GetMouseButtonUp(0) && !clicked) {
-            Click(Input.mousePosition);
+        if (Input.GetMouseButtonUp(0) && !oneClickPerTown) {
+            Vector3 mp = Input.mousePosition;
+            if(mp.x >= 630 && mp.y >= 205 && mp.y <= 375) /* Ne naredi ničesar, zoom */;
+            else Click(Input.mousePosition);
         }
-        if (Input.GetMouseButton(0)) {
+        if (Input.GetMouseButton(1)) {
             MoveAroundTheMap(Input.mousePosition);
         }
+        if(Input.GetMouseButtonUp(1)) lastMousePosition = Vector3.zero;
     }
 
     void MoveAroundTheMap(Vector3 mousePosition)
     {
         mousePosition = MyMath.MouseToWorldPosition(mousePosition);
-        Vector3 newPosition = new Vector3(mousePosition.x, mousePosition.y, -500f);
-        Camera.main.transform.position = newPosition;
+        if(lastMousePosition == Vector3.zero) { // če je to prvi klik sploh ne premikaj zemljevida
+            lastMousePosition = mousePosition;
+            return;
+        }
+
+        Vector3 changePosition = lastMousePosition - mousePosition;
+        changePosition /= 15f;
+        Vector3 newPosition = new Vector3(changePosition.x, changePosition.y, 0);
+        Camera.main.transform.position += newPosition;
+        ClampCameraPosition();
+    }
+
+    void ClampCameraPosition()
+    {
+        Vector3 cP = Camera.main.transform.position;
+        Vector3 newP = cP;
+        if(cP.x >= 55) newP.x = 55;
+        if(cP.x <= -55) newP.x = -55;
+        if(cP.y >= 35) newP.y = 35;
+        if(cP.y <= -35) newP.y = -35;
+        Camera.main.transform.position = newP;
     }
 
     void Click(Vector3 mousePosition)
     {
-        clicked = true;
+        oneClickPerTown = true;
         float distance = DrawPointAndReturnMiss(mousePosition);
         instructionManager.DisplayInfoFor(distance.ToString(), 1.5f);
         Invoke("NextTown", 1.5f);
@@ -82,7 +107,7 @@ public class GameManager : MonoBehaviour {
         currentTown = TownManager.GetNextTown();
         instructionManager.ChangeTown(currentTown.name);
         instructionManager.RefreshTownsLeft((TownManager.currentIndex+1).ToString(), TownManager.NumberOfAllTowns.ToString());
-        clicked = false;
+        oneClickPerTown = false;
     }
 
     public void ZoomIn()
@@ -99,6 +124,12 @@ public class GameManager : MonoBehaviour {
         if (Camera.main.orthographicSize > defaultCameraSize) {
             Camera.main.orthographicSize = defaultCameraSize;
         }
+    }
+
+    public void ResetPositionZoom()
+    {
+        Camera.main.orthographicSize = defaultCameraSize;
+        Camera.main.transform.position = new Vector3(0,0, Camera.main.transform.position.z);
     }
 
     void DrawLine(Vector3 p1, Vector3 p2, float precision)
