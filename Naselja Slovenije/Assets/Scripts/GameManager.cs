@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,15 +27,19 @@ public class GameManager : MonoBehaviour {
         defaultCameraSize = Camera.main.orthographicSize;
 
         try {
-            InicializeTownsLeft();
-        } catch {
-            Invoke("InicializeTownsLeft", 0.1f);
+            InicializeInstructions();
+        } catch(Exception ex) {
+            Debug.Log(ex.Message);
+            Invoke("InicializeInstructions", 0.1f);
+        } finally{
+            Invoke("InicializeInstructions", 0.5f);
         }
     }
 
-    void InicializeTownsLeft()
+    void InicializeInstructions()
     {
         instructionManager.RefreshTownsLeft((TownManager.currentIndex + 1).ToString(), TownManager.NumberOfAllTowns.ToString());
+        instructionManager.ChangeTown(TownManager.currentTown.name);
     }
 
     // Update is called once per frame
@@ -179,6 +184,12 @@ public class GameManager : MonoBehaviour {
         Camera.main.transform.position = new Vector3(0,0, Camera.main.transform.position.z);
     }
 
+    public void SaveScore()
+    {
+        if(score < PlayerPrefs.GetFloat("score"))
+            PlayerPrefs.SetFloat("score", score);
+    }
+
     void DrawLine(Vector3 p1, Vector3 p2, float precision)
     {
         if(precision < 0.001f) precision = 0.001f;
@@ -207,8 +218,10 @@ public class GameManager : MonoBehaviour {
 
     void EndGame()
     {
+        TownManager.GetNextTown();
         Destroy(point);
         Destroy(townPoint);
         ClearLine();
+        instructionManager.ShowHighscore();
     }
 }
