@@ -11,6 +11,7 @@ public class InstructionsManager : MonoBehaviour {
     GameObject townsLeft; 
     GameObject infoBackground; 
     GameObject infoText;
+    GameObject scoreText;
 
 	// Use this for initialization
 	void Start () {
@@ -20,6 +21,7 @@ public class InstructionsManager : MonoBehaviour {
         townsLeft = transform.GetChild(3).gameObject;
         infoBackground = transform.GetChild(4).gameObject;
         infoText = transform.GetChild(5).gameObject;
+        scoreText = transform.GetChild(7).gameObject;
     }
 	
     public void ChangeTown(string name)
@@ -30,7 +32,12 @@ public class InstructionsManager : MonoBehaviour {
     {
         townsLeft.GetComponent<Text>().text = current + " / " + all;
     }
-    
+
+    public void RefreshScore(string score)
+    {
+        scoreText.GetComponent<Text>().text = score;
+    }
+
     public void DisplayInfoFor(string info, float time)
     {
         infoBackground.SetActive(true);
@@ -38,6 +45,7 @@ public class InstructionsManager : MonoBehaviour {
         infoText.GetComponent<Text>().text = info;
         Invoke("ClearInfo", time);
     }
+
     public void ClearInfo()
     {
         infoBackground.SetActive(false);

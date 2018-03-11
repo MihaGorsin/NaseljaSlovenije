@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour {
 
     private bool oneClickPerTown = false;
     private float defaultCameraSize;
+    private float score = 0f;
 
     private GameObject point;
     private GameObject townPoint;
@@ -81,7 +82,15 @@ public class GameManager : MonoBehaviour {
         oneClickPerTown = true;
         float distance = DrawPointAndReturnMiss(mousePosition);
         instructionManager.DisplayInfoFor(StyleDistance(distance), 1.5f);
-        Invoke("NextTown", 1.5f);
+        score += distance;
+        instructionManager.RefreshScore(StyleScore(score));
+        Debug.Log(TownManager.currentIndex);
+        Debug.Log(TownManager.NumberOfAllTowns);
+
+        if(TownManager.currentIndex < TownManager.NumberOfAllTowns - 1)
+            Invoke("NextTown", 1.5f);
+        else
+            EndGame();
     }
 
     string StyleDistance(float distanceF)
@@ -100,6 +109,26 @@ public class GameManager : MonoBehaviour {
         distance += " km";
 
         return distance;
+    }
+
+    string StyleScore(float scoreF)
+    {
+        scoreF = Mathf.Round(scoreF * 100) / 100;
+
+        string score = scoreF.ToString(), twoDecimals = "";
+
+        int dotIndex = score.IndexOf('.');
+        if(dotIndex < 0)
+            score += ".00";
+        else {
+            twoDecimals = score.Substring(dotIndex + 1);
+            if(twoDecimals.Length <= 1)
+                score += "0";
+        }
+
+        score += " pts";
+
+        return score;
     }
 
     float DrawPointAndReturnMiss(Vector3 mousePosition)
@@ -176,5 +205,12 @@ public class GameManager : MonoBehaviour {
         Transform[] children = GetComponentsInChildren<Transform>();
         for(int i=2; i<children.Length; i++)
             Destroy(children[i].gameObject);
+    }
+
+    void EndGame()
+    {
+        Destroy(point);
+        Destroy(townPoint);
+        ClearLine();
     }
 }
