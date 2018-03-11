@@ -84,13 +84,11 @@ public class GameManager : MonoBehaviour {
         instructionManager.DisplayInfoFor(StyleDistance(distance), 1.5f);
         score += distance;
         instructionManager.RefreshScore(StyleScore(score));
-        Debug.Log(TownManager.currentIndex);
-        Debug.Log(TownManager.NumberOfAllTowns);
 
         if(TownManager.currentIndex < TownManager.NumberOfAllTowns - 1)
             Invoke("NextTown", 1.5f);
         else
-            EndGame();
+            Invoke("EndGame", 1.5f);
     }
 
     string StyleDistance(float distanceF)
