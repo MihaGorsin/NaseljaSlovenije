@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour {
 
     void MoveAroundTheMap(Vector3 mousePosition)
     {
-        mousePosition = MyMath.MouseToWorldPosition(mousePosition);
+        mousePosition = MyMath.ScreenToWorldPoint(mousePosition, false);
         if(lastMousePosition == Vector3.zero) { // če je to prvi klik sploh ne premikaj zemljevida
             lastMousePosition = mousePosition;
             return;
@@ -77,26 +77,46 @@ public class GameManager : MonoBehaviour {
 
     void Click(Vector3 mousePosition)
     {
+        Debug.Log("MP: " + Camera.main.ScreenToWorldPoint(mousePosition));
         oneClickPerTown = true;
         float distance = DrawPointAndReturnMiss(mousePosition);
-        instructionManager.DisplayInfoFor(distance.ToString(), 1.5f);
+        instructionManager.DisplayInfoFor(StyleDistance(distance), 1.5f);
         Invoke("NextTown", 1.5f);
+    }
+
+    string StyleDistance(float distanceF)
+    {
+        string distance = distanceF.ToString(), twoDecimals = "";
+
+        int dotIndex = distance.IndexOf('.');
+        if(dotIndex < 0)
+            distance += ".00";
+        else {
+            twoDecimals = distance.Substring(dotIndex+1);
+            if(twoDecimals.Length <= 1)
+                distance += "0";
+        }
+
+        distance += " km";
+
+        return distance;
     }
 
     float DrawPointAndReturnMiss(Vector3 mousePosition)
     {
         point = Instantiate(pointPrefab);
+        point.transform.position = MyMath.ScreenToWorldPoint(mousePosition, true);
+        point.transform.localScale = Vector3.one * MyMath.ZoomScale(point.transform.localScale.x, defaultCameraSize, Camera.main.orthographicSize);
         DrawCurrentTown();
-        point.transform.position = MyMath.MouseToWorldPosition(mousePosition);
-        DrawLine(point.transform.position, MyMath.MouseToWorldPosition(currentTown.position), 1f);
-        float distanceOff = MyMath.DistanceBetweenPoints(point.transform.position, (Vector3)currentTown.position);
+        DrawLine(point.transform.position, currentTown.position, 1f);
+        float distanceOff = MyMath.DistanceBetweenTowns(point.transform.position, currentTown.position);
         return distanceOff;
     }
 
     void DrawCurrentTown()
     {
         townPoint = Instantiate(townPointPrefab);
-        townPoint.transform.position = MyMath.MouseToWorldPosition((Vector3)currentTown.position);
+        townPoint.transform.position = currentTown.position;
     }
 
     void NextTown()
@@ -135,6 +155,7 @@ public class GameManager : MonoBehaviour {
     void DrawLine(Vector3 p1, Vector3 p2, float precision)
     {
         if(precision < 0.001f) precision = 0.001f;
+        precision = MyMath.ZoomScale(precision, defaultCameraSize, Camera.main.orthographicSize);
         float x0 = p1.x, y0 = p1.y, 
             steps = Vector2.Distance(p1, p2) / precision, 
             rx = p1.x-p2.x, 
@@ -144,8 +165,8 @@ public class GameManager : MonoBehaviour {
             x1 = x0 - rx * (i / steps);
             y1 = y0 - ry * (i / steps);
             GameObject p = Instantiate(pointPrefab);
-            p.transform.position = new Vector3(x1, y1, p2.z);
-            p.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            p.transform.position = new Vector3(x1, y1, p1.z);
+            p.transform.localScale = Vector3.one * MyMath.ZoomScale(3f, defaultCameraSize, Camera.main.orthographicSize);
             p.transform.SetParent(transform.GetChild(0));
         }
     }

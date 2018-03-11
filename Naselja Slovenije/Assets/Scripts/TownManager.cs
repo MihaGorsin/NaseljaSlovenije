@@ -5,12 +5,12 @@ using UnityEngine;
 public static class TownManager {
 
     private static List<Town> towns = new List<Town> {
-        new Town("Ljubljana", new Vector2(484f, 245f)),
-        new Town("Maribor", new Vector2(400f, 400f)),
-        new Town("Koper", new Vector2(100f, 40f)),
-        new Town("Domžale", new Vector2(56f, 145f)),
-        new Town("Radomlje", new Vector2(123f, 548f)),
-        new Town("Preserje", new Vector2(788f, 59f))
+        new Town("Ljubljana", new Vector3(-21.4f, -5.7f, 400f)),
+        new Town("Maribor", new Vector3(26.8f, 24.3f, 400f)),
+        new Town("Koper", new Vector3(-55.1f, -36.9f, 400f)),
+        new Town("Domžale", new Vector3(-17.5f, 0.7f, 400f)),
+        new Town("Kamnik", new Vector3(-17.3f, 4.7f, 400f)),
+        new Town("Kranj", new Vector3(-27.1f, 5.5f, 400f))
     };
     private static int index = 0;
 
@@ -44,9 +44,9 @@ public static class TownManager {
 public class Town
 {
     public string name;
-    public Vector2 position;
+    public Vector3 position;
 
-    public Town(string destinationName, Vector2 locationPosition)
+    public Town(string destinationName, Vector3 locationPosition)
     {
         name = destinationName;
         position = locationPosition;

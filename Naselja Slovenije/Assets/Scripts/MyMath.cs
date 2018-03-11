@@ -16,15 +16,25 @@ public static class MyMath {
         }
     }
 
-    public static Vector3 MouseToWorldPosition(Vector3 mousePosition)
+    public static Vector3 ScreenToWorldPoint(Vector3 mousePosition, bool zTo400)
     {
-        Vector3 worldPosition = mousePosition / 14f;
-        worldPosition.z = -50f;
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        if(zTo400) worldPosition.z = 400f;
         return worldPosition;
     }
 
-    public static float DistanceBetweenPoints(Vector3 p1, Vector3 p2)
+    public static float DistanceBetweenTowns(Vector3 p1, Vector3 p2)
     {
-        return Vector3.Distance(p1,p2);
+        float distance = Vector3.Distance(p1, p2);
+        distance *= MapScale.GetScale();
+        distance = Mathf.Round(distance * 100) / 100; // round 2 decimal points
+        return distance;
+    }
+
+    public static float ZoomScale(float localScale, float defaultOrtographicSize, float orthographicSize)
+    {
+        float scale = localScale * orthographicSize;
+        scale /= defaultOrtographicSize;
+        return scale;
     }
 }
