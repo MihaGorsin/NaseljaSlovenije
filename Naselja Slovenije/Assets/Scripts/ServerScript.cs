@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ServerScript : MonoBehaviour
 {
-    string PHP_POST_URL = "http://pigeon.eu.org/SloMap/connection.php";
+    string postURL = "http://pigeon.eu.org/SloMap/post.php";
+    string highscoreURL = "http://pigeon.eu.org/SloMap/getHighscore.php";
 
     public WWW PostScore(string Name, string Date, float Score, string Info)
     {
@@ -13,8 +14,13 @@ public class ServerScript : MonoBehaviour
         form.AddField("Date", Date);
         form.AddField("Score", Score.ToString());
         form.AddField("Info", Info);
-        WWW www = new WWW(PHP_POST_URL, form);
+        WWW www = new WWW(postURL, form);
 
         return www;
+    }
+
+    public WWW GetHighscore()
+    {
+        return new WWW(highscoreURL);
     }
 }

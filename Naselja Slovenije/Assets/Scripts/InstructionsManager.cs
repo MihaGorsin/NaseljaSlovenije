@@ -71,4 +71,12 @@ public class InstructionsManager : MonoBehaviour {
         Text[] textFields = input.GetComponentsInChildren<Text>();
         textFields[0].text = text;
     }
+    public void ChangeConnectionInfo(string text)
+    {
+        highscore.GetComponentsInChildren<Text>()[4].text = text;
+    }
+    public void ChangeHighscoreContent(string text)
+    {
+        highscore.GetComponentsInChildren<Text>()[5].text = text;
+    }
 }

@@ -225,10 +225,11 @@ public class GameManager : MonoBehaviour {
 
         while(true) {
             if(result.isDone) {
+                Debug.Log("here");
                 if(result.error == null) {
-                    instructionManager.ChangeTown("Success.");
+                    instructionManager.ChangeConnectionInfo("Successfully submitted.");
                 } else {
-                    instructionManager.ChangeTown("Fail.");
+                    instructionManager.ChangeConnectionInfo("Failed to submit.");
                 }
 
                 StopCoroutine("PostScore");
@@ -270,5 +271,18 @@ public class GameManager : MonoBehaviour {
         Destroy(townPoint);
         ClearLine();
         instructionManager.ShowHighscore();
+        StartCoroutine("HighScore");
+    }
+
+    IEnumerator HighScore()
+    {
+        WWW highscore = GetComponent<ServerScript>().GetHighscore();
+        while(true) {
+            if(highscore.isDone) {
+                instructionManager.ChangeHighscoreContent(highscore.text);
+                StopCoroutine("HighScore");
+            }
+            yield return null;
+        }
     }
 }
