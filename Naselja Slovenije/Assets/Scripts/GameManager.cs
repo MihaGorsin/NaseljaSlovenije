@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour {
     private const float zoomPrecision = 10f;
 
     private bool oneClickPerTown = false;
+    private bool submitedOnce = false;
     private float defaultCameraSize;
     private float score = 0f;
 
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour {
     void Start () {
         currentTown = TownManager.currentTown;
         defaultCameraSize = Camera.main.orthographicSize;
+        if(PlayerPrefs.GetFloat("score") == 0) PlayerPrefs.SetFloat("score", 10000f);
 
         try {
             InicializeInstructions();
@@ -184,10 +186,55 @@ public class GameManager : MonoBehaviour {
         Camera.main.transform.position = new Vector3(0,0, Camera.main.transform.position.z);
     }
 
-    public void SaveScore()
+    public void SubmitScore()
     {
         if(score < PlayerPrefs.GetFloat("score"))
             PlayerPrefs.SetFloat("score", score);
+
+        string name = instructionManager.GetHighscoreName();
+        if(name == "") {
+            instructionManager.ChangeHighscorePlaceholder("What is your name?");
+        }
+        else {
+            StartCoroutine("PostScore", name);
+        }
+    }
+
+    public void ScoreSubmited()
+    {
+        if(submitedOnce) return;
+
+        if(score < PlayerPrefs.GetFloat("score"))
+            PlayerPrefs.SetFloat("score", score);
+
+        string name = instructionManager.GetHighscoreName();
+        if(name == "") {
+            instructionManager.ChangeHighscorePlaceholder("What is your name?");
+        } else {
+            StartCoroutine("PostScore", name);
+        }
+
+        submitedOnce = true;
+    }
+
+    IEnumerator PostScore(string name)
+    {
+        WWW result = GetComponent<ServerScript>().PostScore(
+            name, System.DateTime.Now.ToString(), PlayerPrefs.GetFloat("score"), ""
+        );
+
+        while(true) {
+            if(result.isDone) {
+                if(result.error == null) {
+                    instructionManager.ChangeTown("Success.");
+                } else {
+                    instructionManager.ChangeTown("Fail.");
+                }
+
+                StopCoroutine("PostScore");
+            }
+            yield return null;
+        }
     }
 
     void DrawLine(Vector3 p1, Vector3 p2, float precision)

@@ -6,16 +6,16 @@ using UnityEngine.UI;
 public class InstructionsManager : MonoBehaviour {
 
     //GameObject townToFindBackground; 
-    GameObject townToFind; 
+    GameObject townToFind;
     //GameObject townsLeftBackground; 
-    GameObject townsLeft; 
-    GameObject infoBackground; 
+    GameObject townsLeft;
+    GameObject infoBackground;
     GameObject infoText;
     GameObject scoreText;
     GameObject highscore;
 
     // Use this for initialization
-    void Start () {
+    void Start() {
         //townToFindBackground = transform.GetChild(0).gameObject;
         townToFind = transform.GetChild(1).gameObject;
         //townsLeftBackground = transform.GetChild(2).gameObject;
@@ -25,7 +25,7 @@ public class InstructionsManager : MonoBehaviour {
         scoreText = transform.GetChild(7).gameObject;
         highscore = transform.GetChild(8).gameObject;
     }
-	
+
     public void ChangeTown(string name)
     {
         townToFind.GetComponent<Text>().text = name;
@@ -57,5 +57,18 @@ public class InstructionsManager : MonoBehaviour {
     public void ShowHighscore()
     {
         highscore.SetActive(true);
+    }
+
+    public string GetHighscoreName()
+    {
+        InputField input = highscore.GetComponentInChildren<InputField>();
+        Text[] textFields = input.GetComponentsInChildren<Text>();
+        return textFields[1].text;
+    }
+    public void ChangeHighscorePlaceholder(string text)
+    {
+        InputField input = highscore.GetComponentInChildren<InputField>();
+        Text[] textFields = input.GetComponentsInChildren<Text>();
+        textFields[0].text = text;
     }
 }
