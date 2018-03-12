@@ -14,6 +14,8 @@ public class InstructionsManager : MonoBehaviour {
     GameObject scoreText;
     GameObject highscore;
 
+    [SerializeField] GameObject ViewPortContent;
+
     // Use this for initialization
     void Start() {
         //townToFindBackground = transform.GetChild(0).gameObject;
@@ -77,6 +79,18 @@ public class InstructionsManager : MonoBehaviour {
     }
     public void ChangeHighscoreContent(string text)
     {
-        highscore.GetComponentsInChildren<Text>()[5].text = text;
+        Text content = highscore.GetComponentsInChildren<Text>()[5];
+        content.text = text;
+        float contentSize = content.GetComponent<RectTransform>().sizeDelta.y;
+
+        Invoke("ChangeContentSize", 0.1f);
+    }
+
+    void ChangeContentSize()
+    {
+        Text content = highscore.GetComponentsInChildren<Text>()[5];
+        float contentSize = content.GetComponent<RectTransform>().sizeDelta.y;
+        RectTransform rect = ViewPortContent.GetComponent<RectTransform>();
+        rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y + contentSize);
     }
 }

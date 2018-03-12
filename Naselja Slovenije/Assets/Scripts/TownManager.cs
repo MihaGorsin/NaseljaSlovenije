@@ -53,6 +53,21 @@ public class Town
     }
 }
 
+public class User
+{
+    public string Name;
+    public string Date;
+    public float Score;
+    public string Info;
+    public User(string name, string date, float score, string info)
+    {
+        Name = name;
+        Date = date;
+        Score = score;
+        Info = info;
+    }
+}
+
 
 /*
  * 

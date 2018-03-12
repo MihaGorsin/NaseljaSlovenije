@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour {
         } finally{
             Invoke("InicializeInstructions", 0.5f);
         }
+        Invoke("EndGame", 1f);
     }
 
     void InicializeInstructions()
@@ -279,10 +280,36 @@ public class GameManager : MonoBehaviour {
         WWW highscore = GetComponent<ServerScript>().GetHighscore();
         while(true) {
             if(highscore.isDone) {
-                instructionManager.ChangeHighscoreContent(highscore.text);
+                string highscoreList = parsePHPoutput(highscore.text);
+                instructionManager.ChangeHighscoreContent(highscoreList);
                 StopCoroutine("HighScore");
             }
             yield return null;
         }
+    }
+
+    string parsePHPoutput(string text)
+    {
+        string[] rows = text.Split('ß');
+        List<User> users = new List<User>();
+
+        foreach(string row in rows) {
+            string[] u = row.Split('_');
+            if(u.Length >= 2) users.Add(new User(u[0], u[1], float.Parse(u[2]), ""));
+        }
+
+        users.Sort( (u1, u2) => u1.Score.CompareTo(u2.Score) );
+
+        string outputText = "";
+        int counter = 1;
+        foreach(User u in users) {
+            outputText += counter.ToString() + ". ";
+            outputText += u.Name + ": ";
+            outputText += u.Score;
+            outputText += "\n";
+            counter++;
+        }
+
+        return outputText;
     }
 }
