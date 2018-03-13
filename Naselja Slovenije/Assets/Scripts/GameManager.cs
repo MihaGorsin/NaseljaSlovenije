@@ -36,7 +36,6 @@ public class GameManager : MonoBehaviour {
         } finally{
             Invoke("InicializeInstructions", 0.5f);
         }
-        Invoke("EndGame", 1f);
     }
 
     void InicializeInstructions()
@@ -214,7 +213,6 @@ public class GameManager : MonoBehaviour {
         } else {
             StartCoroutine("PostScore", name);
         }
-
         submitedOnce = true;
     }
 
@@ -229,6 +227,7 @@ public class GameManager : MonoBehaviour {
                 Debug.Log("here");
                 if(result.error == null) {
                     instructionManager.ChangeConnectionInfo("Successfully submitted.");
+                    StartCoroutine("HighScore");
                 } else {
                     instructionManager.ChangeConnectionInfo("Failed to submit.");
                 }
